@@ -39,14 +39,9 @@ object p05 {
     val condensed = sortedRanges.foldLeft(List.empty[(Long, Long)]) { (processedRanges, currentRange) =>
       val (start, end) = currentRange
       val mergedRanges = processedRanges match {
-        case Nil => List(currentRange)
-        case head :: tail =>
-          val (headStart, headEnd) = head
-          if (start <= headEnd + 1) {
-            (headStart, Math.max(headEnd, end)) :: tail
-          } else {
-            currentRange :: processedRanges
-          }
+        case (headStart, headEnd) :: tail if start <= headEnd + 1 => (headStart, Math.max(headEnd, end)) :: tail
+        // this handles both Nil case and non-overlapping case
+        case _ => currentRange :: processedRanges
       }
       mergedRanges
     }
